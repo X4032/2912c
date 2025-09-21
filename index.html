@@ -5,7 +5,7 @@
   <title>Cocos Creator | xiaoxiaolan</title>
 
   <!-- 广告SDK -->
-  <script src='//libtl.com/sdk.js' data-zone='9804073' data-sdk='show_9804073'></script>
+  <script src='//libtl.com/sdk.js' data-zone='9910217' data-sdk='show_9910217'></script>
 
   <!-- http://www.html5rocks.com/en/mobile/mobifying/ -->
   <meta name="viewport"
@@ -33,15 +33,65 @@
   <!--<meta name="browsermode" content="application">-->
   <meta name="x5-page-mode" content="app">
 
-  <!--<link rel="apple-touch-icon" href=".png" />-->
-  <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
-
   <link rel="stylesheet" type="text/css" href="style.css"/>
+  
+  <style>
+    /* 弹窗样式 */
+    #adPopup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    #adPopupContent {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      max-width: 320px;
+    }
+    #adPopup button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border: none;
+      background: #007bff;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #adPopup button:hover {
+      background: #0056b3;
+    }
+    #adPopup button.close-btn {
+      background: #dc3545;
+    }
+    #adPopup button.close-btn:hover {
+      background: #a71d2a;
+    }
+  </style>
 </head>
 <body>
   <div id="GameDiv" cc_exact_fit_screen="true">
     <div id="Cocos3dGameContainer">
       <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
+    </div>
+  </div>
+
+  <!-- 弹窗结构 -->
+  <div id="adPopup">
+    <div id="adPopupContent">
+      <p>请选择观看广告</p>
+      <button id="showAd1Btn">观看广告 1 (Popup)</button>
+      <button id="showAd2Btn">观看广告 2 (Interstitial)</button>
+      <button class="close-btn" id="closePopupBtn">关闭</button>
     </div>
   </div>
 
@@ -57,8 +107,8 @@
   <script>
     System.import('./index.js').catch(function(err) { console.error(err); });
 
-    // 调用广告函数
-    show_9804073({
+    // 初始广告调用（保留）
+    show_9910217({
       type: 'inApp',
       inAppSettings: {
         frequency: 2,
@@ -67,6 +117,36 @@
         timeout: 5,
         everyPage: false
       }
+    });
+
+    // 60 秒后显示弹窗
+    setTimeout(() => {
+      document.getElementById('adPopup').style.display = 'flex';
+    }, 60000);
+
+    // 广告 1 (Popup)
+    document.getElementById('showAd1Btn').addEventListener('click', () => {
+      show_9910217('pop').then(() => {
+        alert("你看完了广告 1 (Popup)");
+        // 奖励逻辑写这里
+      }).catch(e => {
+        console.log("广告 1 播放出错：", e);
+      });
+    });
+
+    // 广告 2 (Interstitial)
+    document.getElementById('showAd2Btn').addEventListener('click', () => {
+      show_9910217().then(() => {
+        alert("你看完了广告 2 (Interstitial)");
+        // 奖励逻辑写这里
+      }).catch(e => {
+        console.log("广告 2 播放出错：", e);
+      });
+    });
+
+    // 关闭按钮
+    document.getElementById('closePopupBtn').addEventListener('click', () => {
+      document.getElementById('adPopup').style.display = 'none';
     });
   </script>
 </body>
